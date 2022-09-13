@@ -1,4 +1,4 @@
-import path from 'path';
+// import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
 // import { errorHandler } from './middleware/errorMiddleware';
@@ -16,8 +16,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/api/users', require('./routes/userRoutes'));
-// app.use('/api/projects', require('./routes/projectRoutes'));
+// app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/projects', require('./routes/projectRoutes'));
 
 //Serve frontend
 // if (process.env.NODE_ENV === 'production') {
@@ -37,7 +37,7 @@ app.use('/api/users', require('./routes/userRoutes'));
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
 
-//Extending the Request interface to receive the user object
+// Extending the Request interface to receive the user object
 declare module 'express-serve-static-core' {
   interface Request {
     user:
