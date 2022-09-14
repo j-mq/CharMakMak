@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   getProject,
+  setProject,
   // setGoal,
   // updateGoal,
   // deleteGoal,
@@ -10,7 +11,8 @@ import {
 
 const router = express.Router();
 
-router.route('/').get(getProject);
+router.route('/:id').get(getProject);
+router.route('/').post(setProject);
 
 //router.route('/').get(protect, getProject);
 //.post(protect, setGoal);

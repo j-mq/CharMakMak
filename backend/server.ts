@@ -2,13 +2,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 // import { errorHandler } from './middleware/errorMiddleware';
-// import { connectDB } from './config/db';
+import { connectDB } from './config/db';
 import { IUser } from './models/userModel';
 import { Document, Types } from 'mongoose';
 
 dotenv.config();
 
-// connectDB();
+connectDB();
 
 const port = process.env.PORT || 5000;
 const app = express();
