@@ -1,19 +1,19 @@
 import express from 'express';
 import {
-  getProject,
-  setProject,
-  updateProject,
+  getImage,
+  setImage,
   // setGoal,
   // updateGoal,
   // deleteGoal,
-} from '../controllers/projectController';
+} from '../controllers/imageController';
+import { upload } from '../middleware/uploadMiddleware';
 
 //import { protect } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
-router.route('/:id').get(getProject).put(updateProject);
-router.route('/').post(setProject);
+router.route('/').get(getImage);
+router.route('/').post(upload.single('image'), setImage);
 
 //router.route('/').get(protect, getProject);
 //.post(protect, setGoal);

@@ -6,6 +6,8 @@ import { connectDB } from './config/db';
 import { IUser } from './models/userModel';
 import { Document, Types } from 'mongoose';
 
+//TODO: Upload Images
+
 dotenv.config();
 
 connectDB();
@@ -15,9 +17,11 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.set('view engine', 'ejs');
 
 // app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
+app.use('/api/images', require('./routes/imageRoutes'));
 
 //Serve frontend
 // if (process.env.NODE_ENV === 'production') {

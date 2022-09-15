@@ -16,51 +16,61 @@ export const getProject = asyncHandler(async (req, res) => {
 });
 
 //@desc   Set goals
-//@route  POST /api/goals
+//@route  POST /api/project
 //@access Private
 export const setProject = asyncHandler(async (req, res) => {
   if (!req.body.name) {
-    console.log('THE req body', req.body);
     res.status(400);
     throw new Error('Please provide a text value');
   }
-  // if (req.user) {
-  //   const goal = await Goal.create({ text: req.body.text, user: req.user.id });
-  //   res.status(200).json(goal);
-  // }
   const project = await Project.create({
     name: req.body.name,
     nftAllowed: req.body.nftAllowed || false,
+    selectionParts: req.body.selectionParts || [],
   });
 
   res.status(200).json(project);
 });
 
 //@desc   Update goal
-//@route  PUT /api/goals/:id
+//@route  PUT /api/project/:id
 //@access Private
-// export const updateGoal = asyncHandler(async (req, res) => {
-//   const goal = await Goal.findById(req.params.id);
-//   if (!goal) {
-//     res.status(400);
-//     throw new Error("Goal not found");
-//   }
+export const updateProject = asyncHandler(async (req, res) => {
+  const project = await Project.findById(req.params.id);
+  if (!project) {
+    res.status(400);
+    throw new Error('Project not found');
+  }
 
-//   if (req.user) {
-//     //Make sure the loged in user matches the goal user
-//     if (goal.user.toString() !== req.user.id) {
-//       res.status(401);
-//       throw new Error("User not authorized");
-//     }
-//     const updatedGoal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//     });
-//     res.status(200).json(updatedGoal);
-//   } else if (!req.user) {
-//     res.status(401);
-//     throw new Error("User not found");
-//   }
-// });
+  const updatedProject = await Project.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name || project.nftAllowed,
+      nftAllowed: req.body.nftAllowed || project.nftAllowed,
+      selectionParts: req.body.selectionParts
+        ? [...project.selectionParts, ...req.body.selectionParts]
+        : project.selectionParts,
+    },
+    { new: true }
+  );
+
+  res.status(200).json(updatedProject);
+
+  // if (req.user) {
+  //   //Make sure the loged in user matches the goal user
+  //   if (goal.user.toString() !== req.user.id) {
+  //     res.status(401);
+  //     throw new Error("User not authorized");
+  //   }
+  //   const updatedGoal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
+  //     new: true,
+  //   });
+  //   res.status(200).json(updatedGoal);
+  // } else if (!req.user) {
+  //   res.status(401);
+  //   throw new Error("User not found");
+  // }
+});
 
 //@desc   Delete goal
 //@route  GET /api/goals/:id
