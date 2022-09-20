@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose';
 interface IImage {
   name: string;
   desc: string;
-  image: any;
+  img: any;
 }
 
 const imageSchema = new Schema<IImage>(
@@ -21,14 +21,10 @@ const imageSchema = new Schema<IImage>(
       type: String,
       required: [true, 'Please add a boolean value'],
     },
-    image: {
+    img: {
       data: Buffer,
       contentType: String,
     },
-    // descriptionParts: {
-    //   type: [Schema.Types.ObjectId],
-    //   ref: 'DescriptionPart',
-    // },
   },
   { timestamps: true }
 );

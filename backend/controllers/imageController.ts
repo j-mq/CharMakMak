@@ -12,11 +12,9 @@ export const getImage = asyncHandler(async (req, res) => {
       console.log(err);
       res.status(500).send(err);
     } else {
-      res.render('imagesPage', { items: items });
+      res.status(200).json({ items });
     }
   });
-
-  res.status(200).json();
 });
 
 export const setImage = asyncHandler(async (req, res) => {
@@ -26,7 +24,7 @@ export const setImage = asyncHandler(async (req, res) => {
       desc: req.body.desc,
       img: {
         data: fs.readFileSync(
-          path.join(__dirname + '/uploads/' + req.file.filename)
+          path.join(__dirname, '..', 'uploads', req.file.filename)
         ),
         contentType: 'image/png',
       },
@@ -35,7 +33,6 @@ export const setImage = asyncHandler(async (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        // item.save();
         res.redirect('/');
       }
     });
