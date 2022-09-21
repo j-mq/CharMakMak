@@ -8,11 +8,6 @@ interface IImage {
 
 const imageSchema = new Schema<IImage>(
   {
-    // user: {
-    //   type: Schema.Types.ObjectId,
-    //   required: true,
-    //   ref: 'User',
-    // },
     name: {
       type: String,
       required: [true, 'Please add a text value'],

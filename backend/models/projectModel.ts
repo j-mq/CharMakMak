@@ -1,13 +1,16 @@
 import { Schema, model } from 'mongoose';
 
-interface IProject {
+export interface IProject {
   user: Schema.Types.ObjectId;
   name: string;
   nftAllowed: boolean;
-  // imageParts: Schema.Types.ObjectId[];
   selectionParts: {
     name: string;
     options: string[];
+  }[];
+  imageParts: {
+    name: string;
+    images: Schema.Types.ObjectId[];
   }[];
   // descriptionParts: Schema.Types.ObjectId[];
 }
@@ -27,10 +30,21 @@ const projectSchema = new Schema<IProject>(
       type: Boolean,
       required: [true, 'Please add a boolean value'],
     },
-    // imageParts: {
-    //   type: [Schema.Types.ObjectId],
-    //   ref: 'ImagePart',
-    // },
+    imageParts: [
+      {
+        name: {
+          type: String,
+          required: [true, 'Please add a text value'],
+        },
+        images: [
+          {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: 'Image',
+          },
+        ],
+      },
+    ],
     selectionParts: [
       {
         name: {

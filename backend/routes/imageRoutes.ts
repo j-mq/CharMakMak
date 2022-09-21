@@ -13,7 +13,7 @@ import { upload } from '../middleware/uploadMiddleware';
 const router = express.Router();
 
 router.route('/').get(getImage);
-router.route('/').post(upload.single('image'), setImage);
+router.route('/:projectId').post(upload.single('image'), setImage);
 
 //router.route('/').get(protect, getProject);
 //.post(protect, setGoal);
