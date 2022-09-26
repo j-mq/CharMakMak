@@ -6,8 +6,6 @@ import { connectDB } from './config/db';
 import { IUser } from './models/userModel';
 import { Document, Types } from 'mongoose';
 
-//TODO: Design what apis  will be needed for updating images inside projects
-
 dotenv.config();
 
 connectDB();

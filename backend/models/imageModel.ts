@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
 
-interface IImage {
+export interface IImage {
   name: string;
-  desc: string;
   img: any;
+  projectId: Schema.Types.ObjectId;
 }
 
 const imageSchema = new Schema<IImage>(
@@ -12,13 +12,14 @@ const imageSchema = new Schema<IImage>(
       type: String,
       required: [true, 'Please add a text value'],
     },
-    desc: {
-      type: String,
-      required: [true, 'Please add a boolean value'],
-    },
     img: {
       data: Buffer,
       contentType: String,
+    },
+    projectId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'Project',
     },
   },
   { timestamps: true }

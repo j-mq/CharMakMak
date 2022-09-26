@@ -12,6 +12,7 @@ export interface IProject {
     name: string;
     images: Schema.Types.ObjectId[];
   }[];
+  allImages: Schema.Types.ObjectId[];
   // descriptionParts: Schema.Types.ObjectId[];
 }
 
@@ -55,6 +56,13 @@ const projectSchema = new Schema<IProject>(
           type: [String],
           required: [true, 'Please add a text value'],
         },
+      },
+    ],
+    allImages: [
+      {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Image',
       },
     ],
     // descriptionParts: {

@@ -26,7 +26,6 @@ export const setProject = asyncHandler(async (req, res) => {
   const project = await Project.create({
     name: req.body.name,
     nftAllowed: req.body.nftAllowed || false,
-    selectionParts: req.body.selectionParts || [],
   });
 
   res.status(200).json(project);
@@ -41,6 +40,14 @@ export const updateProject = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('Project not found');
   }
+
+  //TODO:
+  //Check image ids exist by getting all ids and checking them against the ids in the request
+  // const imageIds = req.body.imageParts.map((part) => {
+  //   return part.images
+  // }).flat().map((image) => image));
+
+  //Then assign the image ids to the project as image parts
 
   const updatedProject = await Project.findByIdAndUpdate(
     req.params.id,

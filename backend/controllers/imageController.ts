@@ -1,51 +1,58 @@
 import asyncHandler from 'express-async-handler';
 import path from 'path';
 import { Image } from '../models/imageModel';
-import { IProject, Project } from '../models/projectModel';
+import { Project } from '../models/projectModel';
 import fs from 'fs';
 
-//@desc   Set goals
-//@route  POST /api/image
+//@desc   Get images
+//@route  GET /api/image
 //@access Private
-export const getImage = asyncHandler(async (req, res) => {
-  Image.find({}, (err: any, items: any) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      res.status(200).json({ items });
-    }
-  });
+export const getImages = asyncHandler(async (req, res) => {
+  const project = await Project.findById(req.params.projectId);
+  if (!project) {
+    res.status(400);
+    throw new Error('Project not found');
+  }
+  const images = await Image.find({ projectId: req.params.projectId });
+  res.status(200).json(images);
 });
 
-export const setImage = asyncHandler(async (req, res) => {
+//@desc   Set images
+//@route  POST /api/image
+//@access Private
+export const setImages = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.projectId);
-  if (!project || !req.file) {
+
+  if (!project || !req.files || !req.files.length) {
     res.status(400);
     throw new Error('Project not found');
   }
 
-  const imageObject = {
-    name: req.body.name,
-    desc: req.body.desc,
-    img: {
-      data: fs.readFileSync(
-        path.join(__dirname, '..', 'uploads', req.file.filename)
-      ),
-      contentType: req.file.mimetype,
-    },
-  };
+  const files = req.files as Express.Multer.File[];
 
-  const newImage = await Image.create(imageObject);
+  const allImages = files.map((file) => {
+    return {
+      name: file.originalname,
+      img: {
+        data: fs.readFileSync(
+          path.join(__dirname, '..', 'uploads', file.filename)
+        ),
+        contentType: file.mimetype,
+      },
+      projectId: project.id,
+    };
+  });
 
-  const newImageParts: IProject['imageParts'] = [
-    { name: req.body.partsName, images: [newImage.id] },
-  ];
+  allImages.forEach(async (image) => {
+    await Image.create(image);
+  });
+
+  const newImages = await Image.find({ projectId: project.id });
 
   const updatedProject = await Project.findByIdAndUpdate(
     req.params.projectId,
     {
-      imageParts: [...project.imageParts, ...newImageParts],
+      allImages: [...project.allImages, ...newImages],
     },
     { new: true }
   );

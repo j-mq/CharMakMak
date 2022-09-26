@@ -1,7 +1,8 @@
 import express from 'express';
 import {
-  getImage,
-  setImage,
+  getImages,
+  //setImage,
+  setImages,
   // setGoal,
   // updateGoal,
   // deleteGoal,
@@ -12,8 +13,11 @@ import { upload } from '../middleware/uploadMiddleware';
 
 const router = express.Router();
 
-router.route('/').get(getImage);
-router.route('/:projectId').post(upload.single('image'), setImage);
+//router.route('/:projectId').post(upload.single('image'), setImage);
+router
+  .route('/:projectId')
+  .get(getImages)
+  .post(upload.array('images'), setImages);
 
 //router.route('/').get(protect, getProject);
 //.post(protect, setGoal);
