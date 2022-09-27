@@ -7,10 +7,12 @@ export interface IProject {
   selectionParts: {
     name: string;
     options: string[];
+    _id: Schema.Types.ObjectId;
   }[];
   imageParts: {
     name: string;
     images: Schema.Types.ObjectId[];
+    _id: Schema.Types.ObjectId;
   }[];
   allImages: Schema.Types.ObjectId[];
   // descriptionParts: Schema.Types.ObjectId[];
