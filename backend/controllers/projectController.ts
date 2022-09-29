@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { Project } from '../models/projectModel';
 import { Image } from '../models/imageModel';
+import mongoose from 'mongoose';
 // import { User } from "../models/userModel";
 
 //@desc   Get goals
@@ -85,40 +86,15 @@ export const updateSelectionParts = asyncHandler(async (req, res) => {
     throw new Error('Project not found');
   }
 
-  const existingSelectionParts = project.selectionParts.filter(
-    (parts) => parts._id !== req.body.partId
-  )[0];
+  const partId = new mongoose.Types.ObjectId(req.body.partId);
+  const updatedProject = await Project.aggregate([
+    { $unwind: '$selectionParts' },
+    { $match: { 'selectionParts._id': partId } },
+    { $set: { 'selectionParts.name': req.body.name } },
+    { $set: { 'selectionParts.options': req.body.options } },
+  ]);
 
-  if (existingSelectionParts) {
-    console.log('it exists', existingSelectionParts);
-    const updatedSelectionParts = project.selectionParts.map((part) => {
-      console.log('ONE PART', part._id.toString());
-
-      if (part._id.toString() === req.body.partId) {
-        return {
-          ...part,
-          name: req.body.name,
-          options: req.body.options,
-        };
-      } else {
-        return part;
-      }
-    });
-
-    //TODO: How to update object inside array in mongoose?
-
-    console.log('the updated selection parts', updatedSelectionParts);
-
-    const updatedProject = await Project.findByIdAndUpdate(req.params.id, {
-      selectionParts: updatedSelectionParts,
-    });
-    res.status(200).json(updatedProject);
-  } else {
-    const updatedProject = await Project.findByIdAndUpdate(req.params.id, {
-      selectionParts: [...project.selectionParts, req.body.part],
-    });
-    res.status(200).json(updatedProject);
-  }
+  res.status(200).json(updatedProject);
 });
 
 //@desc   Update imageParts
