@@ -2,6 +2,7 @@ import express from 'express';
 import {
   getProject,
   setProject,
+  updateImageParts,
   updateProject,
   updateSelectionParts,
   // setGoal,
@@ -13,10 +14,10 @@ import {
 
 const router = express.Router();
 
-router.route('/:id').get(getProject).put(updateProject);
-
-router.route('/:id/selection-parts').put(updateSelectionParts);
 router.route('/').post(setProject);
+router.route('/:id').get(getProject).put(updateProject);
+router.route('/:id/selection-parts').put(updateSelectionParts);
+router.route('/:id/image-parts').put(updateImageParts);
 
 //router.route('/').get(protect, getProject);
 //.post(protect, setGoal);

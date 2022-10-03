@@ -43,35 +43,10 @@ export const updateProject = asyncHandler(async (req, res) => {
     throw new Error('Project not found');
   }
 
-  const imageParts: { name: string; images: string[] }[] = req.body.imageParts;
-
-  /** Check Images Exist inside Project */
-  for (let i = 0; i < imageParts.length; i++) {
-    const part = imageParts[i];
-    for (let j = 0; j < part.images.length; j++) {
-      const existingImage = await Image.findById(part.images[j]);
-      console.log('The existing image is: ', existingImage?.name);
-      if (!existingImage) {
-        res.status(400);
-        throw new Error('Image not found');
-      }
-    }
-  }
-
-  const updatedProject = await Project.findByIdAndUpdate(
-    req.params.id,
-    {
-      name: req.body.name || project.name,
-      nftAllowed: req.body.nftAllowed || project.nftAllowed,
-      selectionParts: req.body.selectionParts
-        ? [...project.selectionParts, ...req.body.selectionParts]
-        : project.selectionParts,
-      imageParts: req.body.imageParts
-        ? [...project.imageParts, ...req.body.imageParts]
-        : project.imageParts,
-    },
-    { new: true }
-  );
+  const updatedProject = await Project.findByIdAndUpdate(req.params.id, {
+    name: req.body.name || project.name,
+    nftAllowed: req.body.nftAllowed || project.nftAllowed,
+  });
 
   res.status(200).json(updatedProject);
 });
@@ -86,19 +61,35 @@ export const updateSelectionParts = asyncHandler(async (req, res) => {
     throw new Error('Project not found');
   }
 
-  const partId = new mongoose.Types.ObjectId(req.body.partId);
-  const updatedProject = await Project.aggregate([
-    { $unwind: '$selectionParts' },
-    { $match: { 'selectionParts._id': partId } },
-    { $set: { 'selectionParts.name': req.body.name } },
-    { $set: { 'selectionParts.options': req.body.options } },
-  ]);
+  if (req.body.partId) {
+    const partId = new mongoose.Types.ObjectId(req.body.partId);
 
-  res.status(200).json(updatedProject);
+    await Project.updateOne(
+      { _id: req.params.id, 'selectionParts._id': partId },
+      {
+        $set: {
+          'selectionParts.$.name': req.body.name,
+          'selectionParts.$.options': req.body.options,
+        },
+      }
+    );
+
+    const updatedProject = await Project.findById(req.params.id);
+    res.status(200).json(updatedProject);
+  } else {
+    const updatedProject = await Project.findByIdAndUpdate(req.params.id, {
+      selectionParts: [
+        ...project.selectionParts,
+        { name: req.body.name, options: req.body.options },
+      ],
+    });
+
+    res.status(200).json(updatedProject);
+  }
 });
 
 //@desc   Update imageParts
-//@route  PUT /api/project/:id
+//@route  PUT /api/project/:id/image-parts
 //@access Private
 export const updateImageParts = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.id);
@@ -107,32 +98,44 @@ export const updateImageParts = asyncHandler(async (req, res) => {
     throw new Error('Project not found');
   }
 
-  const imageParts: { name: string; images: string[] }[] = req.body.imageParts;
+  const images = req.body.images;
 
   /** Check Images Exist inside Project */
-  for (let i = 0; i < imageParts.length; i++) {
-    const part = imageParts[i];
-    for (let j = 0; j < part.images.length; j++) {
-      const existingImage = await Image.findById(part.images[j]);
-      console.log('The existing image is: ', existingImage?.name);
-      if (!existingImage) {
-        res.status(400);
-        throw new Error('Image not found');
-      }
+  for (let i = 0; i < images.length; i++) {
+    const existingImage = await Image.findById(images[i]);
+    console.log('The existing image is: ', existingImage?.name);
+    if (!existingImage) {
+      res.status(400);
+      throw new Error('Image not found');
     }
   }
 
-  const updatedProject = await Project.findByIdAndUpdate(
-    req.params.id,
-    {
-      imageParts: req.body.imageParts
-        ? [...project.imageParts, ...req.body.imageParts]
-        : project.imageParts,
-    },
-    { new: true }
-  );
+  if (req.body.partId) {
+    const partId = new mongoose.Types.ObjectId(req.body.partId);
 
-  res.status(200).json(updatedProject);
+    await Project.updateOne(
+      { _id: req.params.id, 'imageParts._id': partId },
+      {
+        $set: {
+          'imageParts.$.name': req.body.name,
+          'imageParts.$.images': req.body.images,
+        },
+      }
+    );
+
+    const updatedProject = await Project.findById(req.params.id);
+    res.status(200).json(updatedProject);
+  } else {
+    await Project.findByIdAndUpdate(req.params.id, {
+      imageParts: [
+        ...project.imageParts,
+        { name: req.body.name, images: req.body.images },
+      ],
+    });
+
+    const updatedProject = await Project.findById(req.params.id);
+    res.status(200).json(updatedProject);
+  }
 });
 
 //@desc   Delete goal

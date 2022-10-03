@@ -43,16 +43,22 @@ export const setImages = asyncHandler(async (req, res) => {
     };
   });
 
-  allImages.forEach(async (image) => {
-    await Image.create(image);
-  });
+  const newImagesIds = [];
 
-  const newImages = await Image.find({ projectId: project.id });
+  for (let index = 0; index < allImages.length; index++) {
+    const newImage = await Image.create(allImages[index]);
+    newImagesIds.push(newImage.id);
+  }
+
+  console.log('the new images ids', newImagesIds);
+
+  // const newImages = await Image.find({ projectId: project.id });
+  // const newImagesIds = newImages.map((image) => image._id.toString());
 
   const updatedProject = await Project.findByIdAndUpdate(
     req.params.projectId,
     {
-      allImages: [...project.allImages, ...newImages],
+      allImages: [...project.allImages, ...newImagesIds],
     },
     { new: true }
   );
