@@ -138,6 +138,14 @@ export const updateImageParts = asyncHandler(async (req, res) => {
   }
 });
 
+//TODO: Delete selectionParts based on id
+//TODO: Delete imageParts based on id
+//TODO: Delete image based on id
+
+//TODO: Delete project based on id
+
+//TODO Add all of the same for description parts
+
 //@desc   Delete goal
 //@route  GET /api/goals/:id
 //@access Private
