@@ -64,28 +64,34 @@ export const updateSelectionParts = asyncHandler(async (req, res) => {
   if (req.body.partId) {
     const partId = new mongoose.Types.ObjectId(req.body.partId);
 
-    await Project.updateOne(
-      { _id: req.params.id, 'selectionParts._id': partId },
-      {
-        $set: {
-          'selectionParts.$.name': req.body.name,
-          'selectionParts.$.options': req.body.options,
-        },
-      }
-    );
-
-    const updatedProject = await Project.findById(req.params.id);
-    res.status(200).json(updatedProject);
+    if (req.body.delete) {
+      await Project.updateOne(
+        { _id: req.params.id },
+        {
+          $pull: { selectionParts: { _id: partId } },
+        }
+      );
+    } else {
+      await Project.updateOne(
+        { _id: req.params.id, 'selectionParts._id': partId },
+        {
+          $set: {
+            'selectionParts.$.name': req.body.name,
+            'selectionParts.$.options': req.body.options,
+          },
+        }
+      );
+    }
   } else {
-    const updatedProject = await Project.findByIdAndUpdate(req.params.id, {
+    await Project.findByIdAndUpdate(req.params.id, {
       selectionParts: [
         ...project.selectionParts,
         { name: req.body.name, options: req.body.options },
       ],
     });
-
-    res.status(200).json(updatedProject);
   }
+  const updatedProject = await Project.findById(req.params.id);
+  res.status(200).json(updatedProject);
 });
 
 //@desc   Update imageParts
@@ -103,8 +109,7 @@ export const updateImageParts = asyncHandler(async (req, res) => {
   /** Check Images Exist inside Project */
   for (let i = 0; i < images.length; i++) {
     const existingImage = await Image.findById(images[i]);
-    console.log('The existing image is: ', existingImage?.name);
-    if (!existingImage) {
+    if (!existingImage || existingImage.projectId.toString() !== project.id) {
       res.status(400);
       throw new Error('Image not found');
     }
@@ -113,18 +118,24 @@ export const updateImageParts = asyncHandler(async (req, res) => {
   if (req.body.partId) {
     const partId = new mongoose.Types.ObjectId(req.body.partId);
 
-    await Project.updateOne(
-      { _id: req.params.id, 'imageParts._id': partId },
-      {
-        $set: {
-          'imageParts.$.name': req.body.name,
-          'imageParts.$.images': req.body.images,
-        },
-      }
-    );
-
-    const updatedProject = await Project.findById(req.params.id);
-    res.status(200).json(updatedProject);
+    if (req.body.delete) {
+      await Project.updateOne(
+        { _id: req.params.id },
+        {
+          $pull: { imageParts: { _id: partId } },
+        }
+      );
+    } else {
+      await Project.updateOne(
+        { _id: req.params.id, 'imageParts._id': partId },
+        {
+          $set: {
+            'imageParts.$.name': req.body.name,
+            'imageParts.$.images': req.body.images,
+          },
+        }
+      );
+    }
   } else {
     await Project.findByIdAndUpdate(req.params.id, {
       imageParts: [
@@ -132,18 +143,13 @@ export const updateImageParts = asyncHandler(async (req, res) => {
         { name: req.body.name, images: req.body.images },
       ],
     });
-
-    const updatedProject = await Project.findById(req.params.id);
-    res.status(200).json(updatedProject);
   }
+
+  const updatedProject = await Project.findById(req.params.id);
+  res.status(200).json(updatedProject);
 });
 
-//TODO: Delete selectionParts based on id
-//TODO: Delete imageParts based on id
-//TODO: Delete image based on id
-
 //TODO: Delete project based on id
-
 //TODO Add all of the same for description parts
 
 //@desc   Delete goal

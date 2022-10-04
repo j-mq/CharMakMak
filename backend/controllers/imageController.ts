@@ -4,10 +4,10 @@ import { Image } from '../models/imageModel';
 import { Project } from '../models/projectModel';
 import fs from 'fs';
 
-//@desc   Get images
-//@route  GET /api/image
+//@desc   Get images from Project
+//@route  GET /api/image/:projectId
 //@access Private
-export const getImages = asyncHandler(async (req, res) => {
+export const getProjectImages = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.projectId);
   if (!project) {
     res.status(400);
@@ -17,8 +17,16 @@ export const getImages = asyncHandler(async (req, res) => {
   res.status(200).json(images);
 });
 
+//@desc   Get images from ids
+//@route  GET /api/image/
+//@access Private
+export const getImages = asyncHandler(async (req, res) => {
+  const images = await Image.find({ _id: { $in: req.body.ids } });
+  res.status(200).json(images);
+});
+
 //@desc   Set images
-//@route  POST /api/image
+//@route  POST /api/image/:projectId
 //@access Private
 export const setImages = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.projectId);
@@ -50,12 +58,7 @@ export const setImages = asyncHandler(async (req, res) => {
     newImagesIds.push(newImage.id);
   }
 
-  console.log('the new images ids', newImagesIds);
-
-  // const newImages = await Image.find({ projectId: project.id });
-  // const newImagesIds = newImages.map((image) => image._id.toString());
-
-  const updatedProject = await Project.findByIdAndUpdate(
+  await Project.findByIdAndUpdate(
     req.params.projectId,
     {
       allImages: [...project.allImages, ...newImagesIds],
@@ -63,5 +66,11 @@ export const setImages = asyncHandler(async (req, res) => {
     { new: true }
   );
 
+  const updatedProject = await Project.findById(req.params.projectId);
   res.status(200).json({ updatedProject });
 });
+
+//@desc   Update images
+//@route  PUT /api/image
+//@access Private
+//TODO: delete images, update project

@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  getImages,
+  getProjectImages,
   //setImage,
   setImages,
   // setGoal,
@@ -16,7 +16,7 @@ const router = express.Router();
 //router.route('/:projectId').post(upload.single('image'), setImage);
 router
   .route('/:projectId')
-  .get(getImages)
+  .get(getProjectImages)
   .post(upload.array('images'), setImages);
 
 //router.route('/').get(protect, getProject);
