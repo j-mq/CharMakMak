@@ -149,29 +149,26 @@ export const updateImageParts = asyncHandler(async (req, res) => {
   res.status(200).json(updatedProject);
 });
 
-//TODO: Delete project based on id
 //TODO Add all of the same for description parts
+//TODO Test adding, modifying and deleted all the data for a project
 
 //@desc   Delete goal
-//@route  GET /api/goals/:id
+//@route  GET /api/projects/:id
 //@access Private
-// export const deleteGoal = asyncHandler(async (req, res) => {
-//   const goal = await Goal.findById(req.params.id);
-//   if (!goal) {
-//     res.status(400);
-//     throw new Error("Goal not found");
-//   }
+export const deleteProject = asyncHandler(async (req, res) => {
+  const project = await Project.findById(req.params.id);
+  if (!project) {
+    res.status(400);
+    throw new Error('Project not found');
+  }
 
-//   if (req.user) {
-//     //Make sure the loged in user matches the goal user
-//     if (goal.user.toString() !== req.user.id) {
-//       res.status(401);
-//       throw new Error("User not authorized");
-//     }
-//     await goal.remove();
-//     res.status(200).json({ id: req.params.id });
-//   } else if (!req.user) {
-//     res.status(401);
-//     throw new Error("User not found");
-//   }
-// });
+  await Project.findByIdAndDelete(req.params.id);
+
+  const images = await Image.find({ projectId: req.params.id });
+
+  for (let i = 0; i < images.length; i++) {
+    await Image.findByIdAndDelete(images[i].id);
+  }
+
+  res.status(200).json({ message: 'Project deleted' });
+});

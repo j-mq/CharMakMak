@@ -71,6 +71,55 @@ export const setImages = asyncHandler(async (req, res) => {
 });
 
 //@desc   Update images
-//@route  PUT /api/image
+//@route  DELETE /api/image/:projectId
 //@access Private
-//TODO: delete images, update project
+export const deleteImages = asyncHandler(async (req, res) => {
+  const project = await Project.findById(req.params.projectId);
+  if (!project || !req.body.ids || !req.body.ids.length) {
+    res.status(400);
+    throw new Error('Project not found');
+  }
+
+  for (let index = 0; index < req.body.ids.length; index++) {
+    const image = await Image.findById(req.body.ids[index]);
+    if (image) {
+      await Image.findByIdAndDelete(req.body.ids[index]);
+    }
+  }
+
+  if (project.imageParts.length) {
+    const imagePartsToEdit = project.imageParts.filter((part) => {
+      return (
+        part.images.filter((image) => {
+          return (
+            req.body.ids.find((id: string) => id === image.toString()) ===
+            undefined
+          );
+        }).length > 0
+      );
+    });
+
+    if (imagePartsToEdit.length) {
+      for (let index = 0; index < imagePartsToEdit.length; index++) {
+        const filteredImages = imagePartsToEdit[index].images.filter(
+          (image) =>
+            req.body.ids.find((id: string) => id === image.toString()) ===
+            undefined
+        );
+
+        await Project.updateOne(
+          { _id: req.params.id, 'imageParts._id': imagePartsToEdit[index]._id },
+          {
+            $set: {
+              'imageParts.$.images': filteredImages,
+            },
+          }
+        );
+      }
+    }
+  }
+
+  const updatedImages = await Image.find({ projectId: req.params.projectId });
+
+  res.status(200).json(updatedImages);
+});

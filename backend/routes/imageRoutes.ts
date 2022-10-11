@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  deleteImages,
   getProjectImages,
   //setImage,
   setImages,
@@ -17,7 +18,8 @@ const router = express.Router();
 router
   .route('/:projectId')
   .get(getProjectImages)
-  .post(upload.array('images'), setImages);
+  .post(upload.array('images'), setImages)
+  .delete(deleteImages);
 
 //router.route('/').get(protect, getProject);
 //.post(protect, setGoal);
