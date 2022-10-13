@@ -20,6 +20,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/images', require('./routes/imageRoutes'));
 
+//TODO:
+// 1. add user registration and login handling
+// 2. associate user with projects
+// 3. authentication for interacting with projects using cookies
+
 //Serve frontend
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, '../frontend/build')));
