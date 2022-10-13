@@ -87,6 +87,7 @@ export const deleteImages = asyncHandler(async (req, res) => {
     }
   }
 
+  //Delete from Image parts
   if (project.imageParts.length) {
     const imagePartsToEdit = project.imageParts.filter((part) => {
       return (
@@ -118,6 +119,16 @@ export const deleteImages = asyncHandler(async (req, res) => {
       }
     }
   }
+
+  //Delete from project allImages
+  const filteredImages = project.allImages.filter(
+    (image) =>
+      req.body.ids.find((id: string) => id === image.toString()) === undefined
+  );
+
+  await Project.findByIdAndUpdate(req.params.projectId, {
+    allImages: filteredImages,
+  });
 
   const updatedImages = await Image.find({ projectId: req.params.projectId });
 

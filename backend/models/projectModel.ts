@@ -9,13 +9,16 @@ export interface IProject {
     options: string[];
     _id: Schema.Types.ObjectId;
   }[];
+  descriptionParts: {
+    name: string;
+    _id: Schema.Types.ObjectId;
+  }[];
   imageParts: {
     name: string;
     images: Schema.Types.ObjectId[];
     _id: Schema.Types.ObjectId;
   }[];
   allImages: Schema.Types.ObjectId[];
-  // descriptionParts: Schema.Types.ObjectId[];
 }
 
 const projectSchema = new Schema<IProject>(
@@ -33,6 +36,26 @@ const projectSchema = new Schema<IProject>(
       type: Boolean,
       required: [true, 'Please add a boolean value'],
     },
+    selectionParts: [
+      {
+        name: {
+          type: String,
+          required: [true, 'Please add a text value'],
+        },
+        options: {
+          type: [String],
+          required: [true, 'Please add a text value'],
+        },
+      },
+    ],
+    descriptionParts: [
+      {
+        name: {
+          type: String,
+          required: [true, 'Please add a text value'],
+        },
+      },
+    ],
     imageParts: [
       {
         name: {
@@ -48,18 +71,6 @@ const projectSchema = new Schema<IProject>(
         ],
       },
     ],
-    selectionParts: [
-      {
-        name: {
-          type: String,
-          required: [true, 'Please add a text value'],
-        },
-        options: {
-          type: [String],
-          required: [true, 'Please add a text value'],
-        },
-      },
-    ],
     allImages: [
       {
         type: Schema.Types.ObjectId,
@@ -67,10 +78,6 @@ const projectSchema = new Schema<IProject>(
         ref: 'Image',
       },
     ],
-    // descriptionParts: {
-    //   type: [Schema.Types.ObjectId],
-    //   ref: 'DescriptionPart',
-    // },
   },
   { timestamps: true }
 );

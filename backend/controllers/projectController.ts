@@ -4,7 +4,7 @@ import { Image } from '../models/imageModel';
 import mongoose from 'mongoose';
 // import { User } from "../models/userModel";
 
-//@desc   Get goals
+//@desc   Get project
 //@route  GET /api/project/:id
 //@access Private
 export const getProject = asyncHandler(async (req, res) => {
@@ -17,7 +17,7 @@ export const getProject = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc   Set goals
+//@desc   Set project
 //@route  POST /api/project
 //@access Private
 export const setProject = asyncHandler(async (req, res) => {
@@ -43,10 +43,12 @@ export const updateProject = asyncHandler(async (req, res) => {
     throw new Error('Project not found');
   }
 
-  const updatedProject = await Project.findByIdAndUpdate(req.params.id, {
+  await Project.findByIdAndUpdate(req.params.id, {
     name: req.body.name || project.name,
     nftAllowed: req.body.nftAllowed || project.nftAllowed,
   });
+
+  const updatedProject = await Project.findById(req.params.id);
 
   res.status(200).json(updatedProject);
 });
@@ -88,6 +90,45 @@ export const updateSelectionParts = asyncHandler(async (req, res) => {
         ...project.selectionParts,
         { name: req.body.name, options: req.body.options },
       ],
+    });
+  }
+  const updatedProject = await Project.findById(req.params.id);
+  res.status(200).json(updatedProject);
+});
+
+//@desc   Update descriptionParts
+//@route  PUT /api/project/:id/description-parts/
+//@access Private
+export const updateDescriptionParts = asyncHandler(async (req, res) => {
+  const project = await Project.findById(req.params.id);
+  if (!project) {
+    res.status(400);
+    throw new Error('Project not found');
+  }
+
+  if (req.body.partId) {
+    const partId = new mongoose.Types.ObjectId(req.body.partId);
+
+    if (req.body.delete) {
+      await Project.updateOne(
+        { _id: req.params.id },
+        {
+          $pull: { descriptionParts: { _id: partId } },
+        }
+      );
+    } else {
+      await Project.updateOne(
+        { _id: req.params.id, 'descriptionParts._id': partId },
+        {
+          $set: {
+            'descriptionParts.$.name': req.body.name,
+          },
+        }
+      );
+    }
+  } else {
+    await Project.findByIdAndUpdate(req.params.id, {
+      descriptionParts: [...project.descriptionParts, { name: req.body.name }],
     });
   }
   const updatedProject = await Project.findById(req.params.id);
@@ -149,10 +190,7 @@ export const updateImageParts = asyncHandler(async (req, res) => {
   res.status(200).json(updatedProject);
 });
 
-//TODO Add all of the same for description parts
-//TODO Test adding, modifying and deleted all the data for a project
-
-//@desc   Delete goal
+//@desc   Delete project
 //@route  GET /api/projects/:id
 //@access Private
 export const deleteProject = asyncHandler(async (req, res) => {
