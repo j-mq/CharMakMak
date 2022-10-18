@@ -1,5 +1,6 @@
 import React from 'react';
 import articleStyles from '../styles/Article.module.css';
+import ArticleItem from './ArticleItem';
 
 type ArticleListProps = {
   articles?: any;
@@ -9,9 +10,7 @@ const ArticleList = ({ articles }: ArticleListProps) => {
   return (
     <div className={articleStyles.grid}>
       {articles.map((article: any) => (
-        <div key={article.id}>
-          <h3>{article.title}</h3>
-        </div>
+        <ArticleItem article={article} key={article.id}></ArticleItem>
       ))}
     </div>
   );
