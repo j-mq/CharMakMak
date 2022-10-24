@@ -11,8 +11,14 @@ const Container = styled.div<ContainerProps>`
   background: ${(props) => props.theme.backgroundDark};
   display: flex;
   flex-direction: column;
-  width: ${(props) => (props.isOpen ? '427px' : '30px')};
+  width: ${(props) => (props.isOpen ? '427px' : '60px')};
   transition: width 0.2s ease-in-out;
+`;
+
+const EditArea = styled.div`
+  width: 100%;
+  height: 224px;
+  background: ${(props) => props.theme.backgroundLight};
 `;
 
 type ProjectEditorProps = {
@@ -24,7 +30,10 @@ const ProjectEditor = ({ children }: ProjectEditorProps) => {
 
   return (
     <Container isOpen={open}>
-      <button onClick={() => setOpen(!open)}>Open/Close</button>
+      <button onClick={() => setOpen(!open)}>
+        <i className={`fa-solid fa-arrow-${open ? 'right' : 'left'}`}></i>
+      </button>
+      {open && <EditArea></EditArea>}
     </Container>
   );
 };

@@ -1,4 +1,3 @@
-import navStyles from '../styles/Nav.module.css';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
