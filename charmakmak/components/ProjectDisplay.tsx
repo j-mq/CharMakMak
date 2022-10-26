@@ -28,6 +28,7 @@ const SelectionArea = styled.div`
   background: ${(props) => props.theme.selectionArea};
   flex-shrink: 0;
   overflow-y: auto;
+  padding: 16px;
 `;
 
 type ProjectDisplayProps = {
