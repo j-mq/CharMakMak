@@ -26,6 +26,28 @@ const Project = ({ project }: ProjectProps) => {
     },
   ];
 
+  const imagesDummyData: ItemSelectionData = [
+    {
+      label:
+        'Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi',
+      value: '1',
+      imageUrl:
+        'https://3.bp.blogspot.com/-To8tA3yiE0k/VJF_QawmPdI/AAAAAAAAp0w/oihka8c4k90/s400/animalface_usagi.png',
+    },
+    {
+      label: '2',
+      value: '2',
+      imageUrl:
+        'https://3.bp.blogspot.com/-To8tA3yiE0k/VJF_QawmPdI/AAAAAAAAp0w/oihka8c4k90/s400/animalface_usagi.png',
+    },
+    {
+      label: '3',
+      value: '3',
+      imageUrl:
+        'https://3.bp.blogspot.com/-To8tA3yiE0k/VJF_QawmPdI/AAAAAAAAp0w/oihka8c4k90/s400/animalface_usagi.png',
+    },
+  ];
+
   return (
     <>
       <ProjectDisplay>
@@ -37,7 +59,7 @@ const Project = ({ project }: ProjectProps) => {
           placeholder='please select'
         />
         <ItemSelection
-          data={dummyData}
+          data={imagesDummyData}
           type='image'
           placeholder='please select'
         />

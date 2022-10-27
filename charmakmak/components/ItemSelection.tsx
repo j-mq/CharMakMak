@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -26,6 +27,7 @@ const Input = styled.button`
 
   :focus {
     border: ${(props) => props.theme.inputBorderActive};
+    outline: none;
   }
 `;
 
@@ -33,9 +35,16 @@ const InputLabel = styled.span`
   display: flex;
   align-items: center;
   gap: 4px;
+  width: calc(100% - 8px);
   i {
     font-size: 16px;
   }
+`;
+
+const InputLabelText = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Menu = styled.ul`
@@ -45,6 +54,7 @@ const Menu = styled.ul`
   z-index: 100;
   width: 100%;
   max-height: 200px;
+  overflow-y: auto;
   padding: 0px;
   margin: 0;
   list-style: none;
@@ -55,10 +65,45 @@ const Menu = styled.ul`
   font-size: 14px;
 `;
 
-const MenuItem = styled.li`
+type MenuItemProps = {
+  isSelected: boolean;
+};
+
+const MenuItem = styled.li<MenuItemProps>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 8px;
   cursor: pointer;
-  color: black;
+  color: ${(props) =>
+    props.isSelected
+      ? props.theme.inputSelectedColor
+      : props.theme.inputTextColor};
+  font-weight: ${(props) => (props.isSelected ? 'bold' : 'normal')};
+
+  :first-child {
+    border-radius: 4px 4px 0px 0px;
+  }
+
+  :last-child {
+    border-radius: 0px 0px 4px 4px;
+  }
+
+  :hover {
+    background: ${(props) => props.theme.inputMenuHover};
+  }
+`;
+
+const MenuItemLabel = styled.span`
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const MenuItemImage = styled.span<MenuItemProps>`
+  border: ${(props) =>
+    props.isSelected ? '2px solid ' + props.theme.inputSelectedColor : 'none'};
 `;
 
 export type ItemSelectionData = {
@@ -96,7 +141,7 @@ const ItemSelection = ({
       } else {
         window.removeEventListener('click', onClickItemSelectionOutside);
       }
-    }, 100);
+    }, 1);
   }, [showMenu, onClickItemSelectionOutside]);
 
   const onClickMenuItem = (itemValue: string) => {
@@ -133,9 +178,20 @@ const ItemSelection = ({
       <MenuItem
         key={`item-${item.value}`}
         onClick={() => onClickMenuItem(item.value)}
+        isSelected={item.value === selectedValue}
         aria-hidden
       >
-        {item.label}
+        <MenuItemLabel>{item.label}</MenuItemLabel>
+        {item.imageUrl && (
+          <MenuItemImage isSelected={item.value === selectedValue}>
+            <Image
+              src={item.imageUrl}
+              alt={`selection-image-${item.label}`}
+              width={50}
+              height={50}
+            ></Image>
+          </MenuItemImage>
+        )}
       </MenuItem>
     ));
 
@@ -144,7 +200,7 @@ const ItemSelection = ({
       <Input type='button' onClick={onClickItemSelectionButton}>
         <InputLabel>
           {getTypeIcon()}
-          {getSelectedLabel()}
+          <InputLabelText>{getSelectedLabel()}</InputLabelText>
         </InputLabel>
         <i className='fa-solid fa-chevron-down'></i>
       </Input>
