@@ -7,18 +7,33 @@ type ContainerProps = {
 
 const Container = styled.div<ContainerProps>`
   grid-area: editor;
-  padding: 16px;
+  padding: 0px;
   background: ${(props) => props.theme.backgroundDark};
   display: flex;
-  flex-direction: column;
-  width: ${(props) => (props.isOpen ? '427px' : '60px')};
+  width: ${(props) => (props.isOpen ? '427px' : '16px')};
   transition: width 0.2s ease-in-out;
+  position: relative;
 `;
 
 const EditArea = styled.div`
   width: 100%;
-  height: 224px;
-  background: ${(props) => props.theme.backgroundLight};
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const OpenButton = styled.button`
+  height: 100%;
+  width: 16px;
+  padding: 0px;
+  border: none;
+  background: ${(props) => props.theme.backgroundLighter};
+  cursor: pointer;
+
+  i {
+    font-size: 16px;
+  }
 `;
 
 type ProjectEditorProps = {
@@ -30,10 +45,17 @@ const ProjectEditor = ({ children }: ProjectEditorProps) => {
 
   return (
     <Container isOpen={open}>
-      <button onClick={() => setOpen(!open)}>
-        <i className={`fa-solid fa-arrow-${open ? 'right' : 'left'}`}></i>
-      </button>
-      {open && <EditArea></EditArea>}
+      <OpenButton onClick={() => setOpen(!open)}>
+        <i className={`fa-solid fa-caret-${open ? 'right' : 'left'}`}></i>
+      </OpenButton>
+      {open && (
+        <EditArea>
+          <div>Window: </div>
+          <div>Project Name: Editable</div>
+          <div>Options</div>
+          <div>Add Options</div>
+        </EditArea>
+      )}
     </Container>
   );
 };

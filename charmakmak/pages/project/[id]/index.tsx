@@ -54,9 +54,8 @@ const Project = ({ project }: ProjectProps) => {
 
   return (
     <>
+      <Meta title={'project'} description={'project description'} />
       <ProjectDisplay>
-        <Meta title={'project'} description={'project description'} />
-
         <ItemSelection
           label='Item Title'
           data={dummyData}
