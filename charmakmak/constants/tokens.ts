@@ -3,7 +3,10 @@ export const theme = {
   backgroundLight: '#333333',
   backgroundDark: '#1B1B1B',
   //
+  labelColor: '#FFFFFF',
+  //
   inputBackground: '#B3B3B3',
+  inputBackgroundFaded: 'rgba(179, 179, 179, 0.75)',
   inputBorder: '2px solid #343434',
   inputBorderActive: '2px solid #D86EBA',
   inputTextColor: '#1A1A1A',

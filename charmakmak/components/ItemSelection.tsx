@@ -1,9 +1,21 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
   position: relative;
+`;
+
+const Label = styled.div`
+  color: ${(props) => props.theme.labelColor};
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  height: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 75%;
 `;
 
 const Input = styled.button`
@@ -48,7 +60,7 @@ const InputLabelText = styled.span`
 `;
 
 const Menu = styled.ul`
-  top: 32px;
+  top: 50px;
   left: 0px;
   position: absolute;
   z-index: 100;
@@ -113,6 +125,7 @@ export type ItemSelectionData = {
 }[];
 
 type ItemSelectionProps = {
+  label: string;
   data: ItemSelectionData;
   type: 'selection' | 'image';
   value?: string;
@@ -121,20 +134,21 @@ type ItemSelectionProps = {
 };
 
 const ItemSelection = ({
+  label,
   data,
   type,
   value,
   onChange,
   placeholder,
 }: ItemSelectionProps) => {
-  const [selectedValue, setSelectedValue] = React.useState(value);
-  const [showMenu, setShowMenu] = React.useState(false);
+  const [selectedValue, setSelectedValue] = useState(value);
+  const [showMenu, setShowMenu] = useState(false);
 
-  const onClickItemSelectionOutside = React.useCallback(() => {
+  const onClickItemSelectionOutside = useCallback(() => {
     setShowMenu(false);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setTimeout(() => {
       if (showMenu) {
         window.addEventListener('click', onClickItemSelectionOutside);
@@ -197,6 +211,7 @@ const ItemSelection = ({
 
   return (
     <Container>
+      <Label>{label}</Label>
       <Input type='button' onClick={onClickItemSelectionButton}>
         <InputLabel>
           {getTypeIcon()}

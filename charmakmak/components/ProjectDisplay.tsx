@@ -29,6 +29,9 @@ const SelectionArea = styled.div`
   flex-shrink: 0;
   overflow-y: auto;
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 type ProjectDisplayProps = {

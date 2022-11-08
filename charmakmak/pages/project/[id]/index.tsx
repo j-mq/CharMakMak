@@ -5,12 +5,16 @@ import ProjectEditor from '../../../components/ProjectEditor';
 import ItemSelection, {
   ItemSelectionData,
 } from '../../../components/ItemSelection';
+import TextInput from '../../../components/TextInput';
+import { useState } from 'react';
 
 type ProjectProps = {
   project: any;
 };
 
 const Project = ({ project }: ProjectProps) => {
+  const [textInput, setTextInput] = useState('');
+
   const dummyData: ItemSelectionData = [
     {
       label: '1',
@@ -54,18 +58,25 @@ const Project = ({ project }: ProjectProps) => {
         <Meta title={'project'} description={'project description'} />
 
         <ItemSelection
+          label='Item Title'
           data={dummyData}
           type='selection'
           placeholder='please select'
         />
         <ItemSelection
+          label='Item Title Images Item Title ImagesItem Title ImagesItem Title ImagesItem Title Images'
           data={imagesDummyData}
           type='image'
           placeholder='please select'
         />
-        <h1>My First Project</h1>
-        <p>Project Body</p>
-        <br />
+        <TextInput
+          value={textInput}
+          onChange={(value) => setTextInput(value)}
+          label='Item Input Text Item Input TextItem Input TextItem Input TextItem Input TextItem Input TextItem Input TextItem Input Text'
+          data={imagesDummyData}
+          type='image'
+          placeholder='please select'
+        />
         <Link href='/'>Go Back</Link>
       </ProjectDisplay>
       <ProjectEditor></ProjectEditor>
