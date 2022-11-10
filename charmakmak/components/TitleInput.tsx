@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -39,16 +39,12 @@ const TextInput = ({
   maxCharacters,
   placeholder,
 }: TextInputProps) => {
-  const [isFocused, setIsFocused] = useState(false);
-
   return (
     <Container>
       <Input
         value={value}
         type='text'
         onChange={(e) => onChange(e.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
         maxLength={maxCharacters}
         placeholder={placeholder}
       />
