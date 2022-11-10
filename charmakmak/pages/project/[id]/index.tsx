@@ -72,9 +72,9 @@ const Project = ({ project }: ProjectProps) => {
           value={textInput}
           onChange={(value) => setTextInput(value)}
           label='Item Input Text Item Input TextItem Input TextItem Input TextItem Input TextItem Input TextItem Input TextItem Input Text'
-          data={imagesDummyData}
-          type='image'
+          type='multi'
           placeholder='please select'
+          maxCharacters={500}
         />
         <Link href='/'>Go Back</Link>
       </ProjectDisplay>

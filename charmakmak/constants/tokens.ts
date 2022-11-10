@@ -14,6 +14,8 @@ export const theme = {
   inputMenuBackground: '#E7E7E7',
   inputMenuHover: '#E9C5DF',
   //
+  editorBackground: '#4C4C4C',
+  //
   dropShadow: '0px 3px 3px #1a1a1a',
   selectionArea: '#666666',
 };

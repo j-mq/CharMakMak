@@ -4,6 +4,9 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Label = styled.div`
@@ -32,7 +35,10 @@ const Input = styled.button`
   padding: 6px 8px;
   border-radius: 4px;
   font-size: 14px;
+  text-align: right;
   cursor: pointer;
+  transition: all 150ms ease-in-out;
+
   i {
     font-size: 8px;
   }
@@ -75,6 +81,7 @@ const Menu = styled.ul`
   box-shadow: ${(props) => props.theme.dropShadow};
   background: ${(props) => props.theme.inputMenuBackground};
   font-size: 14px;
+  transition: all 150ms ease-in-out;
 `;
 
 type MenuItemProps = {
