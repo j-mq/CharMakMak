@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import TextInput from './TextInput';
 import TitleInput from './TitleInput';
 import Button from './Button';
+import { partTypes } from '../constants/constants';
+import PartsList from './PartsList';
 
 type ContainerProps = {
   isOpen: boolean;
@@ -82,6 +84,12 @@ const ItemList = styled.div`
   gap: 8px;
 `;
 
+const AddPartsContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+`;
+
 type ProjectEditorProps = {
   children?: React.ReactNode;
 };
@@ -90,10 +98,38 @@ const ProjectEditor = ({ children }: ProjectEditorProps) => {
   const [open, setOpen] = useState<boolean>(true);
   const [textInput, setTextInput] = useState('');
   const [projectNameInput, setProjectNameInput] = useState('');
+  const [selected, setSelected] = useState<string>('');
 
   const onClickUpload = () => {
     console.log('upload');
   };
+
+  const parts = [
+    {
+      id: '1',
+      title: 'Image Part 1',
+      type: partTypes.Image,
+      items: [],
+    },
+    {
+      id: '2',
+      title: 'Image Part 2',
+      type: partTypes.Image,
+      items: [],
+    },
+    {
+      id: '3',
+      title: 'Selection Part',
+      type: partTypes.Selection,
+      items: [],
+    },
+    {
+      id: '4',
+      title: 'Description Part',
+      type: partTypes.Description,
+      items: [],
+    },
+  ];
 
   return (
     <Container isOpen={open}>
@@ -134,8 +170,16 @@ const ProjectEditor = ({ children }: ProjectEditorProps) => {
               maxCharacters={100}
               placeholder='Project Name'
             ></TitleInput>
-            <div>Options</div>
-            <div>Add Options</div>
+            <PartsList
+              parts={parts}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <AddPartsContainer>
+              <Button icon='fa-solid fa-image' onClick={onClickUpload}></Button>
+              <Button icon='fa-solid fa-list' onClick={onClickUpload}></Button>
+              <Button icon='fa-solid fa-font' onClick={onClickUpload}></Button>
+            </AddPartsContainer>
           </ItemList>
         </EditArea>
       )}

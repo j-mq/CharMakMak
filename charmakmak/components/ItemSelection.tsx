@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { partTypes } from '../constants/constants';
 
 const Container = styled.div`
   position: relative;
@@ -185,9 +186,9 @@ const ItemSelection = ({
 
   const getTypeIcon = () => {
     switch (type) {
-      case 'selection':
+      case partTypes.Selection:
         return <i className='fas fa-list'></i>;
-      case 'image':
+      case partTypes.Image:
         return <i className='fas fa-image'></i>;
       default:
         return null;

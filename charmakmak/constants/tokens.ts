@@ -4,6 +4,7 @@ export const theme = {
   backgroundDark: '#1B1B1B',
   //
   labelColor: '#FFFFFF',
+  notSelected: '#C0C0C0',
   //
   inputBackground: '#B3B3B3',
   inputBackgroundFaded: 'rgba(179, 179, 179, 0.75)',
