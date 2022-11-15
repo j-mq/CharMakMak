@@ -5,6 +5,7 @@ import TitleInput from './TitleInput';
 import Button from './Button';
 import { partTypes } from '../constants/constants';
 import PartsList from './PartsList';
+import Saving from './Saving';
 
 type ContainerProps = {
   isOpen: boolean;
@@ -26,6 +27,7 @@ const EditArea = styled.div`
   flex-direction: column;
   padding: 16px;
   gap: 16px;
+  position: relative;
 `;
 
 const ItemEditor = styled.div`
@@ -181,6 +183,7 @@ const ProjectEditor = ({ children }: ProjectEditorProps) => {
               <Button icon='fa-solid fa-font' onClick={onClickUpload}></Button>
             </AddPartsContainer>
           </ItemList>
+          <Saving isSaving />
         </EditArea>
       )}
     </Container>
