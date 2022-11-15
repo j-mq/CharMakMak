@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { partTypes } from '../constants/constants';
 
@@ -9,8 +9,16 @@ const Container = styled.div`
   gap: 8px;
 `;
 
+const TopPart = styled.div`
+  display: flex;
+  height: 8px;
+  width: 100%;
+  background: transparent;
+`;
+
 type PartProps = {
   selected: boolean;
+  draggingOver: boolean;
 };
 
 const Part = styled.button<PartProps>`
@@ -73,6 +81,32 @@ const Handle = styled.div`
   cursor: grab;
 `;
 
+const GhostIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  padding: 4px;
+  z-index: -100;
+  background: black;
+
+  color: ${(props) => props.theme.labelColor};
+  background: ${(props) => props.theme.editorBackground};
+
+  i {
+    color: ${(props) => props.theme.labelColor};
+    font-size: 20px;
+  }
+`;
+
+const DraggingOn = styled.div`
+  width: 100%;
+  height: 2px;
+  background: ${(props) => props.theme.labelColor};
+  margin-top: -10px;
+  z-index: 5;
+`;
+
 export type Part = {
   id: string;
   title: string;
@@ -87,6 +121,11 @@ type PartsListProps = {
 };
 
 const PartsList = ({ parts, selected, setSelected }: PartsListProps) => {
+  const [draggingOverId, setDraggingOverId] = useState<string>('');
+  const [draggedIcon, setDraggedIcon] = useState('');
+
+  const dragGhostRef = useRef<HTMLDivElement | null>(null);
+
   const getTypeIcon = (type: partTypes) => {
     switch (type) {
       case partTypes.Image:
@@ -100,26 +139,81 @@ const PartsList = ({ parts, selected, setSelected }: PartsListProps) => {
     }
   };
 
+  const onDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    id: string,
+    type: partTypes
+  ) => {
+    console.log('the e', e.target);
+
+    e.dataTransfer.dropEffect = 'move';
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('itemID', id);
+    setDraggedIcon(getTypeIcon(type));
+
+    if (dragGhostRef.current) {
+      e.dataTransfer.setDragImage(dragGhostRef.current, 0, 15);
+    }
+  };
+
+  const onDragOver = (e: React.DragEvent<HTMLElement>, id: string) => {
+    e.preventDefault();
+    if (id !== draggingOverId) {
+      setDraggingOverId(id);
+    }
+  };
+
+  const onDrop = (e: React.DragEvent<HTMLElement>, id: string) => {
+    e.preventDefault();
+    const itemID = e.dataTransfer.getData('itemID');
+    setDraggingOverId('');
+    console.log('dragged itemID', itemID);
+    console.log('on top of id', id);
+  };
+
   const makeParts = () => {
     return parts.map((part) => {
       return (
-        <Part
-          key={part.id}
-          onClick={() => setSelected(part.id)}
-          selected={part.id === selected}
-        >
-          <i className={`fas fa-${getTypeIcon(part.type)}`}></i>
-          <PartTitle>{part.title}</PartTitle>
-          <PartItemsCount>{part.items.length} Items</PartItemsCount>
-          <Handle>
-            <i className={`fas fa-grip`}></i>
-          </Handle>
-        </Part>
+        <>
+          <Part
+            key={part.id}
+            onClick={() => setSelected(part.id)}
+            selected={part.id === selected}
+            draggingOver={part.id === draggingOverId}
+            onDragOver={(e) => onDragOver(e, part.id)}
+            onDragLeave={() => setDraggingOverId('')}
+            onDrop={(e) => onDrop(e, part.id)}
+          >
+            <i className={`fas fa-${getTypeIcon(part.type)}`}></i>
+            <PartTitle>{part.title}</PartTitle>
+            <PartItemsCount>{part.items.length} Items</PartItemsCount>
+            <Handle
+              draggable
+              onDragStart={(e) => onDragStart(e, part.id, part.type)}
+            >
+              <i className={`fas fa-grip`}></i>
+            </Handle>
+          </Part>
+          {part.id === draggingOverId && <DraggingOn />}
+        </>
       );
     });
   };
 
-  return <Container>{makeParts()}</Container>;
+  return (
+    <Container>
+      <TopPart
+        onDragOver={(e) => onDragOver(e, 'top-part')}
+        onDragLeave={() => setDraggingOverId('')}
+        onDrop={(e) => onDrop(e, 'top-part')}
+      />
+      {draggingOverId === 'top-part' && <DraggingOn />}
+      {makeParts()}
+      <GhostIcon ref={dragGhostRef}>
+        <i className={`fas fa-${draggedIcon}`} />
+      </GhostIcon>
+    </Container>
+  );
 };
 
 export default PartsList;
