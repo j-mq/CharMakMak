@@ -9,6 +9,8 @@ import mongoose from 'mongoose';
 
 import projectRoutes from './pages/api/routes/projectRoutes';
 
+//TODO: Figure out why cannot import modules 'Cannot find module' error
+
 dotenv.config();
 
 const connectDB = async () => {
