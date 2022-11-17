@@ -108,25 +108,25 @@ const ProjectEditor = ({ children }: ProjectEditorProps) => {
 
   const parts = [
     {
-      id: '1',
+      id: 'p1',
       title: 'Image Part 1',
       type: partTypes.Image,
       items: [],
     },
     {
-      id: '2',
+      id: 'p2',
       title: 'Image Part 2',
       type: partTypes.Image,
       items: [],
     },
     {
-      id: '3',
+      id: 'pp3',
       title: 'Selection Part',
       type: partTypes.Selection,
       items: [],
     },
     {
-      id: '4',
+      id: 'p4',
       title: 'Description Part',
       type: partTypes.Description,
       items: [],

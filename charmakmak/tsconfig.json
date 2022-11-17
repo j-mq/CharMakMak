@@ -15,6 +15,12 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "ssr-server.ts",
+    "ssr-server.ts"
+  ],
   "exclude": ["node_modules"]
 }

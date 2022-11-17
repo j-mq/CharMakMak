@@ -15,7 +15,9 @@ const Home = ({ articles }: HomeProps) => {
 };
 
 export const getStaticProps = async () => {
-  const res = await fetch(`${server}/api/articles`);
+  const res = await fetch(`${server}/api/projects`);
+
+  console.log('the res', res);
   const articles = await res.json();
 
   return {

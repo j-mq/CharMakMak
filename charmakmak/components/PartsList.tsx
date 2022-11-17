@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { partTypes } from '../constants/constants';
 
@@ -174,7 +174,7 @@ const PartsList = ({ parts, selected, setSelected }: PartsListProps) => {
   const makeParts = () => {
     return parts.map((part) => {
       return (
-        <>
+        <Fragment key={`container-${part.id}`}>
           <Part
             key={part.id}
             onClick={() => setSelected(part.id)}
@@ -195,7 +195,7 @@ const PartsList = ({ parts, selected, setSelected }: PartsListProps) => {
             </Handle>
           </Part>
           {part.id === draggingOverId && <DraggingOn />}
-        </>
+        </Fragment>
       );
     });
   };
