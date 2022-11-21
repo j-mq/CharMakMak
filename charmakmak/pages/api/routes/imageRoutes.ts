@@ -3,8 +3,8 @@ import {
   deleteImages,
   getProjectImages,
   setImages,
-} from '../controllers/imageController';
-import { upload } from '../middleware/uploadMiddleware';
+} from '../controllers/imageController.js';
+import { upload } from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
@@ -14,4 +14,4 @@ router
   .post(upload.array('images'), setImages)
   .delete(deleteImages);
 
-module.exports = router;
+export default router;

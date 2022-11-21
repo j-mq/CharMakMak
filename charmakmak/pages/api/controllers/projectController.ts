@@ -21,7 +21,6 @@ export const getProject = asyncHandler(async (req, res) => {
 //@route  POST /api/project
 //@access Private
 export const setProject = asyncHandler(async (req, res) => {
-  console.log('THE REQ BODY', req.body);
   if (!req.body.name) {
     res.status(400);
     throw new Error('Please provide a text value');

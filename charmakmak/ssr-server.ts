@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 // import { Document, Types } from 'mongoose';
 
 import projectRoutes from './pages/api/routes/projectRoutes.js';
+import imageRoutes from './pages/api/routes/imageRoutes.js';
 
 dotenv.config();
 
@@ -35,13 +36,14 @@ app
   .then(() => {
     const server = express();
 
+    server.use(express.json());
+    server.use(express.urlencoded({ extended: false }));
+
     server.get('*', (req, res) => {
-      console.log('THE REQ?', req);
       return handle(req, res);
     });
-
-    //server.use('/api/projects', projectRoutes);
-    // server.use('/api/images', require('./pages/api/routes/imageRoutes'));
+    server.use('/api/projects', projectRoutes);
+    server.use('/api/images', imageRoutes);
 
     server.listen(port, () => {
       console.log(`> Ready on http://localhost:${port}`);

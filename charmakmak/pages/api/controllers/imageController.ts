@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import path from 'path';
-import { Image } from '../models/imageModel';
-import { Project } from '../models/projectModel';
+import { Image } from '../models/imageModel.js';
+import { Project } from '../models/projectModel.js';
 import fs from 'fs';
 
 //@desc   Get images from Project
