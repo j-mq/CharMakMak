@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+
+export default {
   reactStrictMode: true,
   swcMinify: true,
   compiler: {
@@ -9,5 +10,3 @@ const nextConfig = {
     domains: ['3.bp.blogspot.com'], //make it 'your-domain.com'
   },
 };
-
-module.exports = nextConfig;

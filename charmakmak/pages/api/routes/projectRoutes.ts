@@ -7,7 +7,7 @@ import {
   updateImageParts,
   updateProject,
   updateSelectionParts,
-} from '../controllers/projectController';
+} from '../controllers/projectController.js';
 
 //import { protect } from '../middleware/authMiddleware';
 

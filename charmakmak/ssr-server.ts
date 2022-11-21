@@ -7,9 +7,7 @@ import mongoose from 'mongoose';
 // import { IUser } from './models/userModel';
 // import { Document, Types } from 'mongoose';
 
-import projectRoutes from './pages/api/routes/projectRoutes';
-
-//TODO: Figure out why cannot import modules 'Cannot find module' error
+import projectRoutes from './pages/api/routes/projectRoutes.js';
 
 dotenv.config();
 
@@ -38,10 +36,11 @@ app
     const server = express();
 
     server.get('*', (req, res) => {
+      console.log('THE REQ?', req);
       return handle(req, res);
     });
 
-    server.use('/api/projects', projectRoutes);
+    //server.use('/api/projects', projectRoutes);
     // server.use('/api/images', require('./pages/api/routes/imageRoutes'));
 
     server.listen(port, () => {
