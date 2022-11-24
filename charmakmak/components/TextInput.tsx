@@ -89,6 +89,7 @@ const TextInput = ({
   onChange,
   type,
   maxCharacters,
+  placeholder,
 }: TextInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -114,6 +115,7 @@ const TextInput = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           maxLength={maxCharacters}
+          placeholder={placeholder}
         />
       )}
       {type === 'single' && (
@@ -124,6 +126,7 @@ const TextInput = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           maxLength={maxCharacters}
+          placeholder={placeholder}
         />
       )}
     </Container>

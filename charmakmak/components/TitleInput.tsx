@@ -27,17 +27,19 @@ const Input = styled.input`
 `;
 
 type TextInputProps = {
-  value: string;
-  placeholder: string;
-  onChange: (value: string) => void;
   maxCharacters: number;
+  placeholder: string;
+  value: string;
+  onBlur: () => void;
+  onChange: (value: string) => void;
 };
 
 const TextInput = ({
-  value,
-  onChange,
   maxCharacters,
   placeholder,
+  value,
+  onBlur,
+  onChange,
 }: TextInputProps) => {
   return (
     <Container>
@@ -47,6 +49,7 @@ const TextInput = ({
         onChange={(e) => onChange(e.target.value)}
         maxLength={maxCharacters}
         placeholder={placeholder}
+        onBlur={onBlur}
       />
     </Container>
   );

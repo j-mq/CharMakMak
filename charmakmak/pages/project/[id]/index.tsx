@@ -7,13 +7,39 @@ import ItemSelection, {
 } from '../../../components/ItemSelection';
 import TextInput from '../../../components/TextInput';
 import { useState } from 'react';
+import { server } from '../../../config';
+import {
+  DescriptionPart,
+  MAX_DESCRIPTION_INPUT,
+  SelectionPart,
+} from '../../../constants/constants';
 
 type ProjectProps = {
-  project: any;
+  project: {
+    selectionParts: SelectionPart[];
+    descriptionParts: DescriptionPart[];
+    imageParts: [];
+    allImages: [];
+    name: string;
+    nftAllowed: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  };
 };
 
 const Project = ({ project }: ProjectProps) => {
-  const [textInput, setTextInput] = useState('');
+  const defaultTextInputs = project.descriptionParts.map((part) => {
+    return {
+      id: part._id,
+      text: '',
+    };
+  });
+  const [textInputs, setTextInputs] = useState<
+    {
+      id: string;
+      text: string;
+    }[]
+  >(defaultTextInputs);
 
   const dummyData: ItemSelectionData = [
     {
@@ -52,35 +78,104 @@ const Project = ({ project }: ProjectProps) => {
     },
   ];
 
+  const onUpdateProjectName = (newName: string) => {
+    if (newName !== project.name) {
+      console.log('update name', newName);
+    }
+  };
+
+  const makeSelectionParts = () => {
+    return project.selectionParts.map((part) => {
+      const selectionData = part.options.map((option) => {
+        return {
+          label: option,
+          value: `${option}-${part._id}`,
+        };
+      });
+      return (
+        <ItemSelection
+          key={part._id}
+          label={part.name}
+          data={selectionData}
+          type='selection'
+          placeholder='-'
+        />
+      );
+    });
+  };
+
+  const onUpdateTextInput = (id: string, text: string) => {
+    const newTextInput = textInputs.map((input) => {
+      if (input.id === id) {
+        return { ...input, text };
+      }
+      return input;
+    });
+    setTextInputs(newTextInput);
+  };
+
+  const makeDescriptionParts = () => {
+    return project.descriptionParts.map((part) => {
+      return (
+        <TextInput
+          key={part._id}
+          value={textInputs.find((input) => input.id === part._id)?.text || ''}
+          type='multi'
+          onChange={(value) => onUpdateTextInput(part._id, value)}
+          label={part.name}
+          placeholder='...'
+          maxCharacters={MAX_DESCRIPTION_INPUT}
+        />
+      );
+    });
+  };
+
   return (
     <>
       <Meta title={'project'} description={'project description'} />
       <ProjectDisplay>
-        <ItemSelection
-          label='Item Title'
-          data={dummyData}
-          type='selection'
-          placeholder='please select'
-        />
+        {makeSelectionParts()}
         <ItemSelection
           label='Item Title Images Item Title ImagesItem Title ImagesItem Title ImagesItem Title Images'
           data={imagesDummyData}
           type='image'
           placeholder='please select'
         />
-        <TextInput
-          value={textInput}
-          onChange={(value) => setTextInput(value)}
-          label='Item Input Text Item Input TextItem Input TextItem Input TextItem Input TextItem Input TextItem Input TextItem Input Text'
-          type='multi'
-          placeholder='please select'
-          maxCharacters={500}
-        />
-        <Link href='/'>Go Back</Link>
+        {makeDescriptionParts()}
       </ProjectDisplay>
-      <ProjectEditor></ProjectEditor>
+      <ProjectEditor
+        projectName={project.name}
+        updateProjectName={onUpdateProjectName}
+      ></ProjectEditor>
     </>
   );
+};
+
+export const getStaticProps = async (context: any) => {
+  const res = await fetch(`${server}/api/projects/${context.params.id}`);
+
+  const project = await res.json();
+  return {
+    props: {
+      project,
+    },
+  };
+};
+
+export const getStaticPaths = async () => {
+  //Should be changed to get projects from database based on user's id
+  const availableProjects = [
+    '637b48bb92ba5d62877f86d0',
+    '637f2ac1644adcedc935fd79',
+  ];
+  const paths = availableProjects.map((id: any) => ({
+    params: { id: id.toString() },
+  }));
+
+  return {
+    paths: paths,
+    fallback: false,
+  };
 };
 
 export default Project;

@@ -93,13 +93,19 @@ const AddPartsContainer = styled.div`
 `;
 
 type ProjectEditorProps = {
+  projectName: string;
   children?: React.ReactNode;
+  updateProjectName: (newName: string) => void;
 };
 
-const ProjectEditor = ({ children }: ProjectEditorProps) => {
+const ProjectEditor = ({
+  children,
+  projectName,
+  updateProjectName,
+}: ProjectEditorProps) => {
   const [open, setOpen] = useState<boolean>(true);
   const [textInput, setTextInput] = useState('');
-  const [projectNameInput, setProjectNameInput] = useState('');
+  const [projectNameInput, setProjectNameInput] = useState(projectName);
   const [selected, setSelected] = useState<string>('');
 
   const onClickUpload = () => {
@@ -171,6 +177,7 @@ const ProjectEditor = ({ children }: ProjectEditorProps) => {
               onChange={(value) => setProjectNameInput(value)}
               maxCharacters={100}
               placeholder='Project Name'
+              onBlur={() => updateProjectName(projectNameInput)}
             ></TitleInput>
             <PartsList
               parts={parts}

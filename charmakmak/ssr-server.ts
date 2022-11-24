@@ -39,11 +39,12 @@ app
     server.use(express.json());
     server.use(express.urlencoded({ extended: false }));
 
+    server.use('/api/projects', projectRoutes);
+    server.use('/api/images', imageRoutes);
+
     server.get('*', (req, res) => {
       return handle(req, res);
     });
-    server.use('/api/projects', projectRoutes);
-    server.use('/api/images', imageRoutes);
 
     server.listen(port, () => {
       console.log(`> Ready on http://localhost:${port}`);
