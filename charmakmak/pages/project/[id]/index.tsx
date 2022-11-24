@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { server } from '../../../config';
 import {
   DescriptionPart,
+  ImagePart,
   MAX_DESCRIPTION_INPUT,
   SelectionPart,
 } from '../../../constants/constants';
@@ -18,8 +19,8 @@ type ProjectProps = {
   project: {
     selectionParts: SelectionPart[];
     descriptionParts: DescriptionPart[];
-    imageParts: [];
-    allImages: [];
+    imageParts: ImagePart[];
+    allImages: string[];
     name: string;
     nftAllowed: boolean;
     createdAt: Date;

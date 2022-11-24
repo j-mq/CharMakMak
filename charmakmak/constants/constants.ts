@@ -15,4 +15,10 @@ export type DescriptionPart = {
   _id: string;
 };
 
+export type ImagePart = {
+  name: string;
+  images: string[];
+  _id: string;
+};
+
 export const MAX_DESCRIPTION_INPUT = 500;

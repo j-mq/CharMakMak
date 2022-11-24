@@ -1,8 +1,12 @@
 import asyncHandler from 'express-async-handler';
-import path from 'path';
 import { Image } from '../models/imageModel.js';
 import { Project } from '../models/projectModel.js';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 //@desc   Get images from Project
 //@route  GET /api/image/:projectId
