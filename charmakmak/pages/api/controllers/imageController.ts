@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 //@desc   Get images from Project
-//@route  GET /api/image/:projectId
+//@route  GET /api/images/:projectId
 //@access Private
 export const getProjectImages = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.projectId);
@@ -22,7 +22,7 @@ export const getProjectImages = asyncHandler(async (req, res) => {
 });
 
 //@desc   Get images from ids
-//@route  GET /api/image/
+//@route  GET /api/images/
 //@access Private
 export const getImages = asyncHandler(async (req, res) => {
   const images = await Image.find({ _id: { $in: req.body.ids } });
@@ -30,7 +30,7 @@ export const getImages = asyncHandler(async (req, res) => {
 });
 
 //@desc   Set images
-//@route  POST /api/image/:projectId
+//@route  POST /api/images/:projectId
 //@access Private
 export const setImages = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.projectId);
@@ -75,7 +75,7 @@ export const setImages = asyncHandler(async (req, res) => {
 });
 
 //@desc   Update images
-//@route  DELETE /api/image/:projectId
+//@route  DELETE /api/images/:projectId
 //@access Private
 export const deleteImages = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.projectId);

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { partTypes } from '../constants/constants';
+import { DecodedImage, partTypes } from '../constants/constants';
 
 const Container = styled.div`
   position: relative;
@@ -129,7 +129,7 @@ const MenuItemImage = styled.span<MenuItemProps>`
 export type ItemSelectionData = {
   label: string;
   value: string;
-  imageUrl?: string;
+  image?: DecodedImage;
 }[];
 
 type ItemSelectionProps = {
@@ -204,10 +204,10 @@ const ItemSelection = ({
         aria-hidden
       >
         <MenuItemLabel>{item.label}</MenuItemLabel>
-        {item.imageUrl && (
+        {item.image && (
           <MenuItemImage isSelected={item.value === selectedValue}>
             <Image
-              src={item.imageUrl}
+              src={`data:${item.image.mimeType};base64, ${item.image.b64}`}
               alt={`selection-image-${item.label}`}
               width={50}
               height={50}

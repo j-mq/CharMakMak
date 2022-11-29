@@ -1,5 +1,4 @@
 import Meta from '../../../components/Meta';
-import Link from 'next/link';
 import ProjectDisplay from '../../../components/ProjectDisplay';
 import ProjectEditor from '../../../components/ProjectEditor';
 import ItemSelection, {
@@ -12,6 +11,7 @@ import {
   DescriptionPart,
   ImagePart,
   MAX_DESCRIPTION_INPUT,
+  ProjectImages,
   SelectionPart,
 } from '../../../constants/constants';
 
@@ -26,9 +26,10 @@ type ProjectProps = {
     createdAt: Date;
     updatedAt: Date;
   };
+  images: ProjectImages[];
 };
 
-const Project = ({ project }: ProjectProps) => {
+const Project = ({ project, images }: ProjectProps) => {
   const defaultTextInputs = project.descriptionParts.map((part) => {
     return {
       id: part._id,
@@ -41,43 +42,6 @@ const Project = ({ project }: ProjectProps) => {
       text: string;
     }[]
   >(defaultTextInputs);
-
-  const dummyData: ItemSelectionData = [
-    {
-      label: '1',
-      value: '1',
-    },
-    {
-      label: '2',
-      value: '2',
-    },
-    {
-      label: '3',
-      value: '3',
-    },
-  ];
-
-  const imagesDummyData: ItemSelectionData = [
-    {
-      label:
-        'Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi Usagi',
-      value: '1',
-      imageUrl:
-        'https://3.bp.blogspot.com/-To8tA3yiE0k/VJF_QawmPdI/AAAAAAAAp0w/oihka8c4k90/s400/animalface_usagi.png',
-    },
-    {
-      label: '2',
-      value: '2',
-      imageUrl:
-        'https://3.bp.blogspot.com/-To8tA3yiE0k/VJF_QawmPdI/AAAAAAAAp0w/oihka8c4k90/s400/animalface_usagi.png',
-    },
-    {
-      label: '3',
-      value: '3',
-      imageUrl:
-        'https://3.bp.blogspot.com/-To8tA3yiE0k/VJF_QawmPdI/AAAAAAAAp0w/oihka8c4k90/s400/animalface_usagi.png',
-    },
-  ];
 
   const onUpdateProjectName = (newName: string) => {
     if (newName !== project.name) {
@@ -100,6 +64,30 @@ const Project = ({ project }: ProjectProps) => {
           data={selectionData}
           type='selection'
           placeholder='-'
+        />
+      );
+    });
+  };
+
+  const makeImageParts = () => {
+    return project.imageParts.map((part) => {
+      const imagesData: ItemSelectionData = images
+        .filter((image) => part.images.includes(image._id))
+        .map((image) => {
+          return {
+            label: image.name,
+            value: image._id,
+            image: image.img,
+          };
+        });
+
+      return (
+        <ItemSelection
+          key={part._id}
+          label={part.name}
+          data={imagesData}
+          type='image'
+          placeholder='please select'
         />
       );
     });
@@ -136,12 +124,7 @@ const Project = ({ project }: ProjectProps) => {
       <Meta title={'project'} description={'project description'} />
       <ProjectDisplay>
         {makeSelectionParts()}
-        <ItemSelection
-          label='Item Title Images Item Title ImagesItem Title ImagesItem Title ImagesItem Title Images'
-          data={imagesDummyData}
-          type='image'
-          placeholder='please select'
-        />
+        {makeImageParts()}
         {makeDescriptionParts()}
       </ProjectDisplay>
       <ProjectEditor
@@ -152,13 +135,36 @@ const Project = ({ project }: ProjectProps) => {
   );
 };
 
-export const getStaticProps = async (context: any) => {
-  const res = await fetch(`${server}/api/projects/${context.params.id}`);
+//TODO: Check Multer not uploading images correctly
 
-  const project = await res.json();
+export const getStaticProps = async (context: any) => {
+  const projectRes = await fetch(`${server}/api/projects/${context.params.id}`);
+  const projectImagesRes = await fetch(
+    `${server}/api/images/${context.params.id}`
+  );
+
+  const project = await projectRes.json();
+  const imagesRaw = await projectImagesRes.json();
+
+  const images = imagesRaw.map((image: any) => {
+    const buffer = Buffer.from(image.img.data);
+    const b64 = buffer.toString('base64');
+    const mimeType = image.img.contentType;
+
+    return {
+      ...image,
+      img: {
+        b64,
+        mimeType,
+      },
+    };
+  });
+
+  console.log('the images', images);
   return {
     props: {
       project,
+      images,
     },
   };
 };
