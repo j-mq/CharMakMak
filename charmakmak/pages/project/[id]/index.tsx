@@ -8,24 +8,14 @@ import TextInput from '../../../components/TextInput';
 import { useState } from 'react';
 import { server } from '../../../config';
 import {
-  DescriptionPart,
-  ImagePart,
   MAX_DESCRIPTION_INPUT,
+  partTypes,
+  Project,
   ProjectImages,
-  SelectionPart,
 } from '../../../constants/constants';
 
 type ProjectProps = {
-  project: {
-    selectionParts: SelectionPart[];
-    descriptionParts: DescriptionPart[];
-    imageParts: ImagePart[];
-    allImages: string[];
-    name: string;
-    nftAllowed: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  project: Project;
   images: ProjectImages[];
 };
 
@@ -47,6 +37,10 @@ const Project = ({ project, images }: ProjectProps) => {
     if (newName !== project.name) {
       console.log('update name', newName);
     }
+  };
+
+  const onAddPart = (partType: partTypes) => {
+    console.log('please add', partType);
   };
 
   const makeSelectionParts = () => {
@@ -128,14 +122,17 @@ const Project = ({ project, images }: ProjectProps) => {
         {makeDescriptionParts()}
       </ProjectDisplay>
       <ProjectEditor
-        projectName={project.name}
+        project={project}
+        images={images}
         updateProjectName={onUpdateProjectName}
+        addPart={onAddPart}
       ></ProjectEditor>
     </>
   );
 };
 
-//TODO: Check Multer not uploading images correctly
+//TODO: Multer can only upload one file at a time, so we need to upload each image one by one
+// How to fix this?
 
 export const getStaticProps = async (context: any) => {
   const projectRes = await fetch(`${server}/api/projects/${context.params.id}`);
@@ -160,7 +157,6 @@ export const getStaticProps = async (context: any) => {
     };
   });
 
-  console.log('the images', images);
   return {
     props: {
       project,

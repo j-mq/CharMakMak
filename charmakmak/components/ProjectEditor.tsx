@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import TextInput from './TextInput';
 import TitleInput from './TitleInput';
 import Button from './Button';
-import { partTypes } from '../constants/constants';
-import PartsList from './PartsList';
+import { partTypes, Project, ProjectImages } from '../constants/constants';
+import PartsList, { Part } from './PartsList';
 import Saving from './Saving';
 
 type ContainerProps = {
@@ -93,51 +93,59 @@ const AddPartsContainer = styled.div`
 `;
 
 type ProjectEditorProps = {
-  projectName: string;
+  project: Project;
+  images: ProjectImages[];
   children?: React.ReactNode;
   updateProjectName: (newName: string) => void;
+  addPart: (partType: partTypes) => void;
 };
 
 const ProjectEditor = ({
-  children,
-  projectName,
+  images,
+  project,
   updateProjectName,
+  addPart,
 }: ProjectEditorProps) => {
   const [open, setOpen] = useState<boolean>(true);
   const [textInput, setTextInput] = useState('');
-  const [projectNameInput, setProjectNameInput] = useState(projectName);
+  const [projectNameInput, setProjectNameInput] = useState(project.name);
   const [selected, setSelected] = useState<string>('');
 
   const onClickUpload = () => {
     console.log('upload');
   };
 
-  const parts = [
-    {
-      id: 'p1',
-      title: 'Image Part 1',
-      type: partTypes.Image,
-      items: [],
-    },
-    {
-      id: 'p2',
-      title: 'Image Part 2',
-      type: partTypes.Image,
-      items: [],
-    },
-    {
-      id: 'pp3',
-      title: 'Selection Part',
-      type: partTypes.Selection,
-      items: [],
-    },
-    {
-      id: 'p4',
-      title: 'Description Part',
-      type: partTypes.Description,
-      items: [],
-    },
-  ];
+  const getParts = (): Part[] => {
+    const selectionParts = project.selectionParts.map((part) => {
+      return {
+        id: part._id,
+        title: part.name,
+        type: partTypes.Selection,
+        items: part.options,
+      };
+    });
+    const imageParts = project.imageParts.map((part) => {
+      const _images = images
+        .filter((image) => part.images.includes(image._id))
+        .map((image) => image._id);
+
+      return {
+        id: part._id,
+        title: part.name,
+        type: partTypes.Image,
+        items: _images,
+      };
+    });
+    const descriptionParts = project.descriptionParts.map((part) => {
+      return {
+        id: part._id,
+        title: part.name,
+        type: partTypes.Description,
+        items: [],
+      };
+    });
+    return [...selectionParts, ...imageParts, ...descriptionParts];
+  };
 
   return (
     <Container isOpen={open}>
@@ -180,14 +188,23 @@ const ProjectEditor = ({
               onBlur={() => updateProjectName(projectNameInput)}
             ></TitleInput>
             <PartsList
-              parts={parts}
+              parts={getParts()}
               selected={selected}
               setSelected={setSelected}
             />
             <AddPartsContainer>
-              <Button icon='fa-solid fa-image' onClick={onClickUpload}></Button>
-              <Button icon='fa-solid fa-list' onClick={onClickUpload}></Button>
-              <Button icon='fa-solid fa-font' onClick={onClickUpload}></Button>
+              <Button
+                icon='fa-solid fa-image'
+                onClick={() => addPart(partTypes.Image)}
+              ></Button>
+              <Button
+                icon='fa-solid fa-list'
+                onClick={() => addPart(partTypes.Selection)}
+              ></Button>
+              <Button
+                icon='fa-solid fa-font'
+                onClick={() => addPart(partTypes.Description)}
+              ></Button>
             </AddPartsContainer>
           </ItemList>
           <Saving isSaving />

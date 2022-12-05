@@ -32,4 +32,15 @@ export type ProjectImages = {
   img: DecodedImage;
 };
 
+export type Project = {
+  selectionParts: SelectionPart[];
+  descriptionParts: DescriptionPart[];
+  imageParts: ImagePart[];
+  allImages: string[];
+  name: string;
+  nftAllowed: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export const MAX_DESCRIPTION_INPUT = 500;

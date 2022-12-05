@@ -186,7 +186,9 @@ const PartsList = ({ parts, selected, setSelected }: PartsListProps) => {
           >
             <i className={`fas fa-${getTypeIcon(part.type)}`}></i>
             <PartTitle>{part.title}</PartTitle>
-            <PartItemsCount>{part.items.length} Items</PartItemsCount>
+            {part.type !== partTypes.Description && (
+              <PartItemsCount>{part.items.length} Items</PartItemsCount>
+            )}
             <Handle
               draggable
               onDragStart={(e) => onDragStart(e, part.id, part.type)}
