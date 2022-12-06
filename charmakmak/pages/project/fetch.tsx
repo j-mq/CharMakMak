@@ -1,6 +1,4 @@
-import { partTypes, Project } from '../../constants/constants';
-
-//const fetcher = (...args: any[]) => fetch(null, args).then((res) => res.json())
+import { partTypes } from '../../constants/constants';
 
 type UpdateProject = {
   id: string;
@@ -50,4 +48,6 @@ export const addPart = async ({ id, partType }: AddPart) => {
     const json = await response.json();
     return json;
   }
+
+  //TODO: add other parts
 };
