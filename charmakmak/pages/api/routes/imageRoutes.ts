@@ -14,4 +14,7 @@ router
   .post(upload.array('images'), setImages)
   .delete(deleteImages);
 
+//TODO: Multer can only upload one file at a time, so we need to upload each image one by one
+// How to fix this?
+
 export default router;

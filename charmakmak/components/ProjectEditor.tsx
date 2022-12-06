@@ -6,6 +6,7 @@ import Button from './Button';
 import { partTypes, Project, ProjectImages } from '../constants/constants';
 import PartsList, { Part } from './PartsList';
 import Saving from './Saving';
+import { updateProject } from '../pages/project/fetch';
 
 type ContainerProps = {
   isOpen: boolean;
@@ -96,16 +97,10 @@ type ProjectEditorProps = {
   project: Project;
   images: ProjectImages[];
   children?: React.ReactNode;
-  updateProjectName: (newName: string) => void;
   addPart: (partType: partTypes) => void;
 };
 
-const ProjectEditor = ({
-  images,
-  project,
-  updateProjectName,
-  addPart,
-}: ProjectEditorProps) => {
+const ProjectEditor = ({ images, project, addPart }: ProjectEditorProps) => {
   const [open, setOpen] = useState<boolean>(true);
   const [textInput, setTextInput] = useState('');
   const [projectNameInput, setProjectNameInput] = useState(project.name);
@@ -113,6 +108,17 @@ const ProjectEditor = ({
 
   const onClickUpload = () => {
     console.log('upload');
+  };
+
+  const onUpdateProjectName = async (newName: string) => {
+    if (newName !== project.name) {
+      const updated = await updateProject({
+        id: project._id,
+        name: newName,
+        nftAllowed: project.nftAllowed,
+      });
+      setProjectNameInput(updated.name);
+    }
   };
 
   const getParts = (): Part[] => {
@@ -185,7 +191,7 @@ const ProjectEditor = ({
               onChange={(value) => setProjectNameInput(value)}
               maxCharacters={100}
               placeholder='Project Name'
-              onBlur={() => updateProjectName(projectNameInput)}
+              onBlur={() => onUpdateProjectName(projectNameInput)}
             ></TitleInput>
             <PartsList
               parts={getParts()}

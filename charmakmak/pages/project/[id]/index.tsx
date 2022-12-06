@@ -13,6 +13,7 @@ import {
   Project,
   ProjectImages,
 } from '../../../constants/constants';
+import { updateProject } from '../fetch';
 
 type ProjectProps = {
   project: Project;
@@ -32,12 +33,6 @@ const Project = ({ project, images }: ProjectProps) => {
       text: string;
     }[]
   >(defaultTextInputs);
-
-  const onUpdateProjectName = (newName: string) => {
-    if (newName !== project.name) {
-      console.log('update name', newName);
-    }
-  };
 
   const onAddPart = (partType: partTypes) => {
     console.log('please add', partType);
@@ -124,15 +119,11 @@ const Project = ({ project, images }: ProjectProps) => {
       <ProjectEditor
         project={project}
         images={images}
-        updateProjectName={onUpdateProjectName}
         addPart={onAddPart}
       ></ProjectEditor>
     </>
   );
 };
-
-//TODO: Multer can only upload one file at a time, so we need to upload each image one by one
-// How to fix this?
 
 export const getStaticProps = async (context: any) => {
   const projectRes = await fetch(`${server}/api/projects/${context.params.id}`);

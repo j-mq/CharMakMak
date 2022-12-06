@@ -33,6 +33,7 @@ export type ProjectImages = {
 };
 
 export type Project = {
+  _id: string;
   selectionParts: SelectionPart[];
   descriptionParts: DescriptionPart[];
   imageParts: ImagePart[];

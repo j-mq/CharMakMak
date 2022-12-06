@@ -5,7 +5,7 @@ import { Image } from '../models/imageModel.js';
 // import { User } from "../models/userModel";
 
 //@desc   Get project
-//@route  GET /api/project/:id
+//@route  GET /api/projects/:id
 //@access Private
 export const getProject = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.id);
@@ -34,7 +34,7 @@ export const setProject = asyncHandler(async (req, res) => {
 });
 
 //@desc   Update project
-//@route  PUT /api/project/:id
+//@route  PUT /api/projects/:id
 //@access Private
 export const updateProject = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.id);
@@ -54,7 +54,7 @@ export const updateProject = asyncHandler(async (req, res) => {
 });
 
 //@desc   Update selectionParts
-//@route  PUT /api/project/:id/selection-parts/
+//@route  PUT /api/projects/:id/selection-parts/
 //@access Private
 export const updateSelectionParts = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.id);
@@ -97,7 +97,7 @@ export const updateSelectionParts = asyncHandler(async (req, res) => {
 });
 
 //@desc   Update descriptionParts
-//@route  PUT /api/project/:id/description-parts/
+//@route  PUT /api/projects/:id/description-parts/
 //@access Private
 export const updateDescriptionParts = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.id);
@@ -136,7 +136,7 @@ export const updateDescriptionParts = asyncHandler(async (req, res) => {
 });
 
 //@desc   Update imageParts
-//@route  PUT /api/project/:id/image-parts
+//@route  PUT /api/projects/:id/image-parts
 //@access Private
 export const updateImageParts = asyncHandler(async (req, res) => {
   const project = await Project.findById(req.params.id);
