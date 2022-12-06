@@ -13,7 +13,7 @@ import {
   Project,
   ProjectImages,
 } from '../../../constants/constants';
-import { updateProject } from '../fetch';
+import { addPart, updateProject } from '../fetch';
 
 type ProjectProps = {
   project: Project;
@@ -21,6 +21,8 @@ type ProjectProps = {
 };
 
 const Project = ({ project, images }: ProjectProps) => {
+  const [selectionParts, setSelectionParts] = useState(project.selectionParts);
+
   const defaultTextInputs = project.descriptionParts.map((part) => {
     return {
       id: part._id,
@@ -34,12 +36,13 @@ const Project = ({ project, images }: ProjectProps) => {
     }[]
   >(defaultTextInputs);
 
-  const onAddPart = (partType: partTypes) => {
-    console.log('please add', partType);
+  const onAddPart = async (partType: partTypes) => {
+    const updatedProject = await addPart({ id: project._id, partType });
+    setSelectionParts(updatedProject.selectionParts);
   };
 
   const makeSelectionParts = () => {
-    return project.selectionParts.map((part) => {
+    return selectionParts.map((part) => {
       const selectionData = part.options.map((option) => {
         return {
           label: option,
@@ -118,6 +121,7 @@ const Project = ({ project, images }: ProjectProps) => {
       </ProjectDisplay>
       <ProjectEditor
         project={project}
+        selectionParts={selectionParts}
         images={images}
         addPart={onAddPart}
       ></ProjectEditor>

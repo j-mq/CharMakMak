@@ -3,7 +3,12 @@ import styled from 'styled-components';
 import TextInput from './TextInput';
 import TitleInput from './TitleInput';
 import Button from './Button';
-import { partTypes, Project, ProjectImages } from '../constants/constants';
+import {
+  partTypes,
+  Project,
+  ProjectImages,
+  SelectionPart,
+} from '../constants/constants';
 import PartsList, { Part } from './PartsList';
 import Saving from './Saving';
 import { updateProject } from '../pages/project/fetch';
@@ -95,12 +100,18 @@ const AddPartsContainer = styled.div`
 
 type ProjectEditorProps = {
   project: Project;
+  selectionParts: SelectionPart[];
   images: ProjectImages[];
   children?: React.ReactNode;
   addPart: (partType: partTypes) => void;
 };
 
-const ProjectEditor = ({ images, project, addPart }: ProjectEditorProps) => {
+const ProjectEditor = ({
+  images,
+  project,
+  addPart,
+  selectionParts,
+}: ProjectEditorProps) => {
   const [open, setOpen] = useState<boolean>(true);
   const [textInput, setTextInput] = useState('');
   const [projectNameInput, setProjectNameInput] = useState(project.name);
@@ -122,7 +133,7 @@ const ProjectEditor = ({ images, project, addPart }: ProjectEditorProps) => {
   };
 
   const getParts = (): Part[] => {
-    const selectionParts = project.selectionParts.map((part) => {
+    const _selectionParts = selectionParts.map((part) => {
       return {
         id: part._id,
         title: part.name,
@@ -150,7 +161,7 @@ const ProjectEditor = ({ images, project, addPart }: ProjectEditorProps) => {
         items: [],
       };
     });
-    return [...selectionParts, ...imageParts, ...descriptionParts];
+    return [..._selectionParts, ...imageParts, ...descriptionParts];
   };
 
   return (
